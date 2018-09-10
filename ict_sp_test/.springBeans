@@ -8,6 +8,7 @@
 	<enableImports><![CDATA[false]]></enableImports>
 	<configs>
 		<config>src/main/resources/ch1/ioc.xml</config>
+		<config>src/main/resources/ch7/ioc.xml</config>
 	</configs>
 	<autoconfigs>
 	</autoconfigs>
