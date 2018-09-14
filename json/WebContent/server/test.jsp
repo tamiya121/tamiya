@@ -1,53 +1,64 @@
+
+<%@page import="Common.DBCon"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.PreparedStatement"%>
+<%@page import="java.sql.Connection"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.Map"%>
 <%@page import="com.google.gson.Gson"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
 <%! 
-public class Person {
-	private String name;
-	private String id;
-	private String pwd;
-	private String trans;
+
+
+
+public class DepartInfo {
+	private Long diNum;
+	private String diCode;
+	private String diName;
+	private String diDesc;
+	
+	public DepartInfo(){
+		
+	}
 	
 
-
-	public String getName() {
-		return name;
+	public Long getDiNum() {
+		return diNum;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setDiNum(Long diNum) {
+		this.diNum = diNum;
 	}
 
-	public String getId() {
-		return id;
+	public String getDiCode() {
+		return diCode;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setDiCode(String diCode) {
+		this.diCode = diCode;
 	}
 
-	public String getPwd() {
-		return pwd;
+	public String getDiName() {
+		return diName;
 	}
 
-	public void setPwd(String pwd) {
-		this.pwd = pwd;
+	public void setDiName(String diName) {
+		this.diName = diName;
 	}
 
-	public String getTrans() {
-		return trans;
+	public String getDiDesc() {
+		return diDesc;
 	}
 
-	public void setTrans(String trans) {
-		this.trans = trans;
+	public void setDiDesc(String diDesc) {
+		this.diDesc = diDesc;
 	}
 
 	@Override
 	public String toString() {
-		return "Person [name=" + name + ", id=" + id + ", pwd=" + pwd + ", trans=" + trans + "]";
+		return "DepartInfo [diNum=" + diNum + ", diCode=" + diCode + ", diName=" + diName + ", diDesc=" + diDesc + "]";
 	}
 	
 	
@@ -56,18 +67,22 @@ public class Person {
 <%
 String param = request.getParameter("param");
 Gson gson = new Gson();
-Person p = gson.fromJson(request.getReader(), Person.class);
+DepartInfo di = gson.fromJson(request.getReader(), DepartInfo.class);
 
+Connection con = DBCon.getCon();
+String sql = "select * from depart_info";
+PreparedStatement ps = con.prepareStatement(sql);
+ResultSet rs = ps.executeQuery();
+List<DepartInfo> diList = new ArrayList<DepartInfo>();
 
-List<Person> pList = new ArrayList<Person>();
-
-for(int i=1; i<=10; i++){
-	p = new Person();
-	p.setId("id" + i);
-	p.setPwd("비번" + i);
-	p.setName("이름" + i);
-	p.setTrans(((i%2)+1) + "");
-	pList.add(p);
+while(rs.next()){
+	DepartInfo d = new DepartInfo();
+	d.setDiNum(rs.getLong("diNum"));
+	d.setDiCode(rs.getString("diCode"));
+	d.setDiName(rs.getString("diName"));
+	d.setDiDesc(rs.getString("diDesc"));
+	diList.add(d);
 }
-out.println(gson.toJson(pList));
+System.out.println(diList);
+out.println(gson.toJson(diList));
 %>    
